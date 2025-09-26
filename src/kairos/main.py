@@ -13,8 +13,9 @@ def main():
     sub = parser.add_subparsers(dest="cmd")
 
     # scan subcommand
-    scan = sub.add_parser("scan", help="Run a sample scan (placeholder)")
-    scan.add_argument("--dry", action="store_true", help="Dry run: no system changes")
+    scan = sub.add_parser("scan", help="Run a heuristic scan")
+    scan.add_argument("--dry", action="store_true", help="Dry run: no outbound notifications")
+    scan.add_argument("--enable-sms", action="store_true", help="Enable SMS for this run (overrides config to true)")
 
     # report subcommand (+ --open flag)
     rep = sub.add_parser("report", help="Render latest report")
@@ -28,7 +29,9 @@ def main():
 
     if args.cmd == "scan":
         cfg = load_config()
-        out = run_process_scan_and_write_incident(cfg)
+        if args.enable_sms:
+            cfg.alerts["sms_enabled"] = True
+        out = run_process_scan_and_write_incident(cfg, dry=args.dry)
         console.print(f"[bold yellow]Scan complete[/bold yellow] → {out}")
 
     elif args.cmd == "report":
