@@ -1,0 +1,9 @@
+{
+  "id": "INC-BASELINE-1758864071",
+  "sev": "P5",
+  "summary": "No suspicious processes detected by heuristics",
+  "artifacts": [],
+  "recommendations": [
+    "No action required. Continue monitoring."
+  ]
+}

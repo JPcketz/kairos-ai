@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 from rich.console import Console
 from .core.config import ensure_default_config, load_config
-from .core.scaffold import write_sample_incident
+from .core.scaffold import run_process_scan_and_write_incident
 from .reports.html import render_report
 
 console = Console()
@@ -28,7 +28,7 @@ def main():
 
     if args.cmd == "scan":
         cfg = load_config()
-        out = write_sample_incident(cfg)
+        out = run_process_scan_and_write_incident(cfg)
         console.print(f"[bold yellow]Scan complete[/bold yellow] → {out}")
 
     elif args.cmd == "report":

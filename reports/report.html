@@ -14,51 +14,29 @@ pre { background: #111; color: #eee; padding: 1rem; border-radius: 8px; overflow
 </head>
 <body>
   <h1>Kairos A.I. — Report</h1>
-  <small>Generated 2025-09-25 19:09:51.681637</small>
+  <small>Generated 2025-09-26 00:21:33.430820</small>
   
   <div class="card">
-    <div><span class="badge">P1</span> <b>INC-1758844989</b></div>
-    <p>Suspicious PowerShell download cradle</p>
+    <div><span class="badge">P5</span> <b>INC-BASELINE-1758864071</b></div>
+    <p>No suspicious processes detected by heuristics</p>
     <h3>Artifacts</h3>
     <ul>
-      
-        <li><b>process</b>: <code>powershell.exe -nop -w hidden -enc ...</code></li>
-      
-        <li><b>network</b>: <code>hxxp://mal.example/payload.bin</code></li>
       
     </ul>
     <h3>Recommendations</h3>
     <ul>
       
-        <li>Terminate suspicious process</li>
-      
-        <li>Block egress to mal.example at firewall</li>
-      
-        <li>Acquire volatile memory if feasible</li>
-      
-        <li>Hash and quarantine payload</li>
+        <li>No action required. Continue monitoring.</li>
       
     </ul>
     <h3>Raw</h3>
     <pre>{
-  "id": "INC-1758844989",
-  "sev": "P1",
-  "summary": "Suspicious PowerShell download cradle",
-  "artifacts": [
-    {
-      "type": "process",
-      "value": "powershell.exe -nop -w hidden -enc ..."
-    },
-    {
-      "type": "network",
-      "value": "hxxp://mal.example/payload.bin"
-    }
-  ],
+  "id": "INC-BASELINE-1758864071",
+  "sev": "P5",
+  "summary": "No suspicious processes detected by heuristics",
+  "artifacts": [],
   "recommendations": [
-    "Terminate suspicious process",
-    "Block egress to mal.example at firewall",
-    "Acquire volatile memory if feasible",
-    "Hash and quarantine payload"
+    "No action required. Continue monitoring."
   ]
 }</pre>
   </div>
