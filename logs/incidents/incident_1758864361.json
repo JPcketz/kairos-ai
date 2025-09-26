@@ -1,0 +1,9 @@
+{
+  "id": "INC-COMPOSITE-1758864361",
+  "sev": "P5",
+  "summary": "No suspicious signals detected by heuristics",
+  "artifacts": [],
+  "recommendations": [
+    "No action required. Continue monitoring."
+  ]
+}
