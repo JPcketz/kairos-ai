@@ -5,6 +5,7 @@ from .core.config import ensure_default_config, load_config
 from .core.scaffold import run_process_scan_and_write_incident
 from .reports.html import render_report
 from .reports.pdf import render_pdf_from_incident
+from .reports.playbook import render_playbook_md, render_ticket_text
 
 console = Console()
 
@@ -18,12 +19,16 @@ def main():
     scan.add_argument("--dry", action="store_true", help="Dry run: no outbound notifications")
     scan.add_argument("--enable-sms", action="store_true", help="Enable SMS for this run (overrides config to true)")
 
-    # report
+    # report (HTML)
     rep = sub.add_parser("report", help="Render latest HTML report")
     rep.add_argument("--open", action="store_true", help="Open the report after rendering")
 
     # pdf
     pdf = sub.add_parser("pdf", help="Render the latest incident as a PDF")
+
+    # playbook
+    play = sub.add_parser("playbook", help="Generate a containment playbook and ticket text from latest incident")
+    play.add_argument("--open", action="store_true", help="Open the playbook after rendering")
 
     args = parser.parse_args()
 
@@ -58,6 +63,25 @@ def main():
             return
         out = render_pdf_from_incident(latest, Path(cfg.paths.get("reports", "reports")))
         console.print(f"[bold magenta]PDF written[/bold magenta] → {out}")
+
+    elif args.cmd == "playbook":
+        cfg = load_config()
+        logs_dir = Path(cfg.paths.get("logs", "logs"))
+        inc_dir = logs_dir / "incidents"
+        latest = None
+        for p in sorted(inc_dir.glob("incident_*.json")):
+            latest = p
+        if not latest:
+            console.print("[red]No incidents found. Run 'kairos scan' first.[/red]")
+            return
+        reports_dir = Path(cfg.paths.get("reports", "reports"))
+        md_path = render_playbook_md(latest, reports_dir)
+        txt_path = render_ticket_text(latest, reports_dir)
+        console.print(f"[bold magenta]Playbook written[/bold magenta] → {md_path}")
+        console.print(f"[bold magenta]Ticket text written[/bold magenta] → {txt_path}")
+        if getattr(args, "open", False):
+            import webbrowser
+            webbrowser.open(md_path.resolve().as_uri())
 
     elif not args.init:
         parser.print_help()
