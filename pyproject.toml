@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kairos-ai"
+version = "0.1.0"
+description = "Kairos A.I. — local-first SOC sidekick for detection, triage, and incident reporting."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Kairos A.I." }]
+license = { text = "MIT" }
+# Keeping deps in requirements.txt for now
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+kairos = "kairos.main:main"

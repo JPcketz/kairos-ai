@@ -1,0 +1,21 @@
+{
+  "id": "INC-1758844779",
+  "sev": "P1",
+  "summary": "Suspicious PowerShell download cradle",
+  "artifacts": [
+    {
+      "type": "process",
+      "value": "powershell.exe -nop -w hidden -enc ..."
+    },
+    {
+      "type": "network",
+      "value": "hxxp://mal.example/payload.bin"
+    }
+  ],
+  "recommendations": [
+    "Terminate suspicious process",
+    "Block egress to mal.example at firewall",
+    "Acquire volatile memory if feasible",
+    "Hash and quarantine payload"
+  ]
+}

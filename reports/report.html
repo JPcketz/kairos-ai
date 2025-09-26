@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kairos Report</title>
+<style>
+body { font-family: system-ui, sans-serif; margin: 2rem; }
+h1 { margin-bottom: 0; }
+small { color: #555; }
+pre { background: #111; color: #eee; padding: 1rem; border-radius: 8px; overflow:auto; }
+.badge { display:inline-block; padding: 2px 8px; border-radius: 12px; background:#222; color:#0ff; font-weight:600; }
+.card { border:1px solid #333; border-radius:12px; padding:1rem; margin:1rem 0; }
+</style>
+</head>
+<body>
+  <h1>Kairos A.I. — Report</h1>
+  <small>Generated 2025-09-25 19:09:51.681637</small>
+  
+  <div class="card">
+    <div><span class="badge">P1</span> <b>INC-1758844989</b></div>
+    <p>Suspicious PowerShell download cradle</p>
+    <h3>Artifacts</h3>
+    <ul>
+      
+        <li><b>process</b>: <code>powershell.exe -nop -w hidden -enc ...</code></li>
+      
+        <li><b>network</b>: <code>hxxp://mal.example/payload.bin</code></li>
+      
+    </ul>
+    <h3>Recommendations</h3>
+    <ul>
+      
+        <li>Terminate suspicious process</li>
+      
+        <li>Block egress to mal.example at firewall</li>
+      
+        <li>Acquire volatile memory if feasible</li>
+      
+        <li>Hash and quarantine payload</li>
+      
+    </ul>
+    <h3>Raw</h3>
+    <pre>{
+  "id": "INC-1758844989",
+  "sev": "P1",
+  "summary": "Suspicious PowerShell download cradle",
+  "artifacts": [
+    {
+      "type": "process",
+      "value": "powershell.exe -nop -w hidden -enc ..."
+    },
+    {
+      "type": "network",
+      "value": "hxxp://mal.example/payload.bin"
+    }
+  ],
+  "recommendations": [
+    "Terminate suspicious process",
+    "Block egress to mal.example at firewall",
+    "Acquire volatile memory if feasible",
+    "Hash and quarantine payload"
+  ]
+}</pre>
+  </div>
+  
+</body>
+</html>

@@ -1,0 +1,16 @@
+pydantic>=2.8
+pyyaml>=6.0
+rich>=13.7
+watchdog>=4.0
+requests>=2.32
+jinja2>=3.1
+
+# Planned later (enable when wired):
+# yara-python
+# fastapi
+# uvicorn
+# scikit-learn
+# pefile
+# psutil
+# reportlab
+# weasyprint

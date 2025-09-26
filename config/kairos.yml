@@ -1,0 +1,11 @@
+tier: basic
+alerts:
+  email_enabled: false
+  sms_enabled: false
+  sms_provider: twilio
+  sms_from: ""
+  sms_to: []
+paths:
+  logs: "logs"
+  reports: "reports"
+  cases: "cases"

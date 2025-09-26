@@ -1,0 +1,61 @@
+Metadata-Version: 2.4
+Name: kairos-ai
+Version: 0.1.0
+Summary: Kairos A.I. — local-first SOC sidekick for detection, triage, and incident reporting.
+Author: Kairos A.I.
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+
+\# Kairos A.I. — Your SOC Sidekick
+
+
+
+\*\*Kairos A.I.\*\* is a local-first cybersecurity assistant for SOC analysts, blue teamers, and ethical hackers. It collects signals (files, processes, network, email/logs), analyzes them with rules/heuristics, recommends containment actions, and auto-generates clean incident reports—so humans can keep defending instead of doing paperwork.
+
+
+
+\## MVP Capabilities
+
+\- \*\*Signal collection\*\*: file/process/network scans, mailbox/log intake (configurable)
+
+\- \*\*Detection \& triage\*\*: rules + heuristics (ML-ready design)
+
+\- \*\*Guided response\*\*: suggested actions; optional one-click containment per policy
+
+\- \*\*Reporting\*\*: HTML/PDF summaries, ticket-ready text
+
+\- \*\*Notifications\*\*: console/email; SMS for SEV1/P1 events (opt-in)
+
+\- \*\*Local-first \& private\*\*: all processing stays on-device by default
+
+
+
+\## Roadmap (Short-term)
+
+\- v0.1: Baseline collectors/analyzers, config system, CLI, local HTML report
+
+\- v0.2: Email intake (IMAP/MSG/EML), spam/malware heuristics, SMS alert channel
+
+\- v0.3: YARA support + basic ruleset, Windows-focused responders (quarantine/kill)
+
+\- v0.4: Tier flags (Basic/Pro), simple policy engine, persistent case store
+
+
+
+\## Why “Kairos”?
+
+In Greek, \*\*Kairos\*\* is the opportune moment to act. That’s our job: surface the right signal at the right time with the right action.
+
+
+
+\## Install (Dev)
+
+```bash
+
+python -m venv .venv
+
+.\\.venv\\Scripts\\activate
+
+pip install -r requirements.txt
+

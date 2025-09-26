@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+src/kairos/__init__.py
+src/kairos/__main__.py
+src/kairos/main.py
+src/kairos/core/config.py
+src/kairos/core/scaffold.py
+src/kairos/reports/html.py
+src/kairos_ai.egg-info/PKG-INFO
+src/kairos_ai.egg-info/SOURCES.txt
+src/kairos_ai.egg-info/dependency_links.txt
+src/kairos_ai.egg-info/entry_points.txt
+src/kairos_ai.egg-info/top_level.txt
