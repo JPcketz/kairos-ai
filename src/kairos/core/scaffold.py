@@ -1,12 +1,22 @@
 import json, time
 from pathlib import Path
-from .config import AppConfig
+import yaml
+from .config import AppConfig, DEFAULT_CFG
 from ..collectors.processes import snapshot_processes, find_suspicious_processes
 from ..collectors.network import snapshot_netconns, find_suspicious_netconns
 from ..collectors.filesystem import sweep_recent_files
 from ..analyzers.rules import incident_from_signals
+from ..notifiers.formatting import summarize_incident
+from ..notifiers.sms_twilio import build_from_env_and_config
+from .policy import load_policy, apply_policy
 
-def run_process_scan_and_write_incident(cfg: AppConfig) -> Path:
+def _load_cfg_dict() -> dict:
+    try:
+        return yaml.safe_load(DEFAULT_CFG.read_text(encoding="utf-8")) or {}
+    except Exception:
+        return {}
+
+def run_process_scan_and_write_incident(cfg: AppConfig, *, dry: bool = True) -> Path:
     logs_dir = Path(cfg.paths.get("logs","logs"))
     logs_dir.mkdir(exist_ok=True)
     incidents_dir = logs_dir / "incidents"
@@ -25,8 +35,30 @@ def run_process_scan_and_write_incident(cfg: AppConfig) -> Path:
     # filesystem (last 24h)
     file_hits = sweep_recent_files(minutes=24*60)
 
+    # initial incident from signals
     inc = incident_from_signals(proc_hits, net_hits, file_hits, ts)
+    inc_dict = inc.__dict__
 
+    # load full cfg dict (for policy) and apply policy
+    cfg_dict = _load_cfg_dict()
+    policy = load_policy(cfg.alerts, cfg_dict)
+    inc_dict = apply_policy(inc_dict, policy)
+
+    # write output
     out = incidents_dir / f"incident_{ts}.json"
-    out.write_text(json.dumps(inc.__dict__, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(inc_dict, indent=2), encoding="utf-8")
+
+    # Notify if configured and P1 (after policy)
+    try:
+        alerts = cfg.alerts or {}
+        if alerts.get("sms_enabled", False) and inc_dict.get("sev") == "P1":
+            subject, body = summarize_incident(inc_dict)
+            if dry:
+                (logs_dir / "dryrun.txt").write_text(f"Would SMS:\n{subject}\n{body}\n", encoding="utf-8")
+            else:
+                twilio = build_from_env_and_config(alerts)
+                twilio.notify(subject, body)
+    except Exception as e:
+        (logs_dir / "notify_error.txt").write_text(str(e), encoding="utf-8")
+
     return out

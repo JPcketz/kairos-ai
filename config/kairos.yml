@@ -9,3 +9,15 @@ paths:
   logs: "logs"
   reports: "reports"
   cases: "cases"
+
+policy:
+  thresholds:
+    p1_min_types: 2     # P1 requires at least 2 signal types (proc/net/file)
+    suppress_p5: true   # keep P5 but mark as “no suspicious signals after allowlist”
+  allow:
+    process_names: []   # e.g., ["backup.exe", "corporatevpn.exe"]
+    paths: []           # e.g., ["c:\\tools\\safe-scripts\\", "c:\\company\\onboarding\\"]
+    ips_or_domains: []  # e.g., ["1.2.3.4", "updates.contoso.com"]
+  deny:
+    process_cmdline_keywords: [" -enc", "downloadstring", "invoke-webrequest", "bitsadmin"]
+    file_exts: [".ps1", ".vbs", ".js", ".jse", ".wsf", ".hta", ".bat", ".cmd", ".lnk", ".dll", ".exe", ".scr"]
