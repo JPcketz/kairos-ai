@@ -57,6 +57,11 @@ def _artifact_allowed(art: Dict[str, Any], policy: Policy) -> bool:
         for host in policy.allow_ips_or_domains:
             if host and host in v:
                 return True
+	
+    if t.startswith("email"):
+        for host in policy.allow_ips_or_domains:
+            if host and host in v:
+                return True
 
     return False
 
@@ -81,8 +86,13 @@ def _count_types(arts: List[Dict[str, Any]]) -> int:
     kinds = set()
     for a in arts:
         t = (a.get("type") or "").lower()
-        if t in {"process","network","file"}:
-            kinds.add(t)
+        # ADD "email" here:
+        if t in {"process","network","file","email","email:url","email:attachment"}:
+            # normalize both email:* under "email"
+            if t.startswith("email"):
+                kinds.add("email")
+            else:
+                kinds.add(t)
     return len(kinds)
 
 def apply_policy(incident: Dict[str, Any], policy: Policy) -> Dict[str, Any]:

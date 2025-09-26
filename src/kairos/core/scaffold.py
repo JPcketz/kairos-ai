@@ -5,6 +5,9 @@ from .config import AppConfig, DEFAULT_CFG
 from ..collectors.processes import snapshot_processes, find_suspicious_processes
 from ..collectors.network import snapshot_netconns, find_suspicious_netconns
 from ..collectors.filesystem import sweep_recent_files
+from ..collectors.email_imap import fetch_recent_unread
+from ..collectors.email_local import load_eml_dir
+from ..analyzers.email_rules import analyze_emails
 from ..analyzers.rules import incident_from_signals
 from ..notifiers.formatting import summarize_incident
 from ..notifiers.sms_twilio import build_from_env_and_config
@@ -35,20 +38,36 @@ def run_process_scan_and_write_incident(cfg: AppConfig, *, dry: bool = True) -> 
     # filesystem (last 24h)
     file_hits = sweep_recent_files(minutes=24*60)
 
-    # initial incident from signals
+    # emails
+    cfg_dict = _load_cfg_dict()
+    eml_dir = (cfg_dict.get("email", {}) or {}).get("local_eml_dir", "mailbox")
+    emails: list = []
+    try:
+        emails.extend(load_eml_dir(eml_dir))
+    except Exception:
+        pass
+    try:
+        emails.extend(fetch_recent_unread(cfg_dict))
+    except Exception:
+        # failing IMAP should not break scan; log if needed
+        (logs_dir / "imap_error.txt").write_text("IMAP fetch failed (check config/env).", encoding="utf-8")
+
+    email_arts = analyze_emails(emails)
+
+    # initial incident from signals (we'll pass file hits for counting; email artifacts get appended)
     inc = incident_from_signals(proc_hits, net_hits, file_hits, ts)
     inc_dict = inc.__dict__
+    inc_dict["artifacts"].extend(email_arts)
 
-    # load full cfg dict (for policy) and apply policy
-    cfg_dict = _load_cfg_dict()
+    # policy
     policy = load_policy(cfg.alerts, cfg_dict)
     inc_dict = apply_policy(inc_dict, policy)
 
-    # write output
+    # write
     out = incidents_dir / f"incident_{ts}.json"
     out.write_text(json.dumps(inc_dict, indent=2), encoding="utf-8")
 
-    # Notify if configured and P1 (after policy)
+    # notify on P1 (after policy)
     try:
         alerts = cfg.alerts or {}
         if alerts.get("sms_enabled", False) and inc_dict.get("sev") == "P1":

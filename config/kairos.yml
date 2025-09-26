@@ -21,3 +21,11 @@ policy:
   deny:
     process_cmdline_keywords: [" -enc", "downloadstring", "invoke-webrequest", "bitsadmin"]
     file_exts: [".ps1", ".vbs", ".js", ".jse", ".wsf", ".hta", ".bat", ".cmd", ".lnk", ".dll", ".exe", ".scr"]
+
+email:
+  enabled: false        # set to true only if you want to try IMAP
+  imap_host: ""         # e.g., outlook.office365.com or imap.gmail.com
+  imap_port: 993
+  folder: "INBOX"
+  max_messages: 10
+  local_eml_dir: "mailbox"   # drop .eml files here for offline testing

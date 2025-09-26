@@ -6,6 +6,10 @@ requests>=2.32
 jinja2>=3.1
 psutil>=5.9
 twilio>=9.0
+imapclient>=3.0
+mail-parser>=3.16
+python-magic-bin>=0.4.14
+reportlab>=4.2
 
 # Planned later (enable when wired):
 # yara-python

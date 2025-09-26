@@ -4,6 +4,7 @@ from rich.console import Console
 from .core.config import ensure_default_config, load_config
 from .core.scaffold import run_process_scan_and_write_incident
 from .reports.html import render_report
+from .reports.pdf import render_pdf_from_incident
 
 console = Console()
 
@@ -12,14 +13,17 @@ def main():
     parser.add_argument("--init", action="store_true", help="Create default config if missing")
     sub = parser.add_subparsers(dest="cmd")
 
-    # scan subcommand
+    # scan
     scan = sub.add_parser("scan", help="Run a heuristic scan")
     scan.add_argument("--dry", action="store_true", help="Dry run: no outbound notifications")
     scan.add_argument("--enable-sms", action="store_true", help="Enable SMS for this run (overrides config to true)")
 
-    # report subcommand (+ --open flag)
-    rep = sub.add_parser("report", help="Render latest report")
+    # report
+    rep = sub.add_parser("report", help="Render latest HTML report")
     rep.add_argument("--open", action="store_true", help="Open the report after rendering")
+
+    # pdf
+    pdf = sub.add_parser("pdf", help="Render the latest incident as a PDF")
 
     args = parser.parse_args()
 
@@ -29,9 +33,9 @@ def main():
 
     if args.cmd == "scan":
         cfg = load_config()
-        if args.enable_sms:
+        if getattr(args, "enable_sms", False):
             cfg.alerts["sms_enabled"] = True
-        out = run_process_scan_and_write_incident(cfg, dry=args.dry)
+        out = run_process_scan_and_write_incident(cfg, dry=getattr(args, "dry", False))
         console.print(f"[bold yellow]Scan complete[/bold yellow] → {out}")
 
     elif args.cmd == "report":
@@ -41,6 +45,19 @@ def main():
         if getattr(args, "open", False):
             import webbrowser
             webbrowser.open(Path(out).resolve().as_uri())
+
+    elif args.cmd == "pdf":
+        cfg = load_config()
+        logs_dir = Path(cfg.paths.get("logs", "logs"))
+        inc_dir = logs_dir / "incidents"
+        latest = None
+        for p in sorted(inc_dir.glob("incident_*.json")):
+            latest = p
+        if not latest:
+            console.print("[red]No incidents found. Run 'kairos scan' first.[/red]")
+            return
+        out = render_pdf_from_incident(latest, Path(cfg.paths.get("reports", "reports")))
+        console.print(f"[bold magenta]PDF written[/bold magenta] → {out}")
 
     elif not args.init:
         parser.print_help()
