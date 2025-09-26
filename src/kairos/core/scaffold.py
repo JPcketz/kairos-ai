@@ -9,6 +9,7 @@ from ..collectors.email_imap import fetch_recent_unread
 from ..collectors.email_local import load_eml_dir
 from ..analyzers.email_rules import analyze_emails
 from ..analyzers.rules import incident_from_signals
+from ..analyzers.chain_rules import find_suspicious_proc_chains
 from ..notifiers.formatting import summarize_incident
 from ..notifiers.sms_twilio import build_from_env_and_config
 from .policy import load_policy, apply_policy
@@ -30,6 +31,7 @@ def run_process_scan_and_write_incident(cfg: AppConfig, *, dry: bool = True) -> 
     # processes
     procs = snapshot_processes()
     proc_hits = find_suspicious_processes(procs)
+    chain_arts = find_suspicious_proc_chains(procs)  # parent->child chains
 
     # network
     netconns = snapshot_netconns()
@@ -49,14 +51,16 @@ def run_process_scan_and_write_incident(cfg: AppConfig, *, dry: bool = True) -> 
     try:
         emails.extend(fetch_recent_unread(cfg_dict))
     except Exception:
-        # failing IMAP should not break scan; log if needed
         (logs_dir / "imap_error.txt").write_text("IMAP fetch failed (check config/env).", encoding="utf-8")
 
     email_arts = analyze_emails(emails)
 
-    # initial incident from signals (we'll pass file hits for counting; email artifacts get appended)
+    # build initial incident
     inc = incident_from_signals(proc_hits, net_hits, file_hits, ts)
     inc_dict = inc.__dict__
+
+    # append chain + email artifacts
+    inc_dict["artifacts"].extend(chain_arts)
     inc_dict["artifacts"].extend(email_arts)
 
     # policy

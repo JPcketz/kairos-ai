@@ -1,0 +1,9 @@
+[P2] INC-COMPOSITE-1758909603 — 11 recent suspicious file(s) in monitored paths
+- file: C:\Users\jas06\Downloads\OculusSetup (1).exe (.exe, 4774136 bytes, sha256=f4d758549c5b5873c9e4ab8592c667e05fce0156aa64d8c6bbe28e6382873c2c)
+- file: C:\Users\jas06\Downloads\OculusSetup (2).exe (.exe, 4774136 bytes, sha256=f4d758549c5b5873c9e4ab8592c667e05fce0156aa64d8c6bbe28e6382873c2c)
+- file: C:\Users\jas06\Downloads\OculusSetup (3).exe (.exe, 4774136 bytes, sha256=f4d758549c5b5873c9e4ab8592c667e05fce0156aa64d8c6bbe28e6382873c2c)
+- file: C:\Users\jas06\Downloads\OculusSetup.exe (.exe, 4774136 bytes, sha256=f4d758549c5b5873c9e4ab8592c667e05fce0156aa64d8c6bbe28e6382873c2c)
+- file: C:\Users\jas06\Downloads\urgent_invoice.exe (.exe, 6 bytes, sha256=837ccb607e312b170fac7383d7ccfd61fa5072793f19a25e75fbacb56539b86b)
+- file: C:\Users\jas06\Downloads\VirtualDesktop.Streamer.Setup.exe (.exe, 103585944 bytes, sha256=n/a)
+... (+5 more artifacts)
+Actions requested: triage, contain (terminate/quarantine), and update ticket with outcomes.
