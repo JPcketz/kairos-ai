@@ -6,6 +6,7 @@ from .core.scaffold import run_process_scan_and_write_incident
 from .reports.html import render_report
 from .reports.pdf import render_pdf_from_incident
 from .reports.playbook import render_playbook_md, render_ticket_text
+from .reports.bundle import bundle_latest
 
 console = Console()
 
@@ -29,6 +30,9 @@ def main():
     # playbook
     play = sub.add_parser("playbook", help="Generate a containment playbook and ticket text from latest incident")
     play.add_argument("--open", action="store_true", help="Open the playbook after rendering")
+
+    # bundle
+    bundle = sub.add_parser("bundle", help="Zip latest artifacts (HTML, PDF, playbook, ticket, JSON) for handoff")
 
     args = parser.parse_args()
 
@@ -82,6 +86,17 @@ def main():
         if getattr(args, "open", False):
             import webbrowser
             webbrowser.open(md_path.resolve().as_uri())
+
+    elif args.cmd == "bundle":
+        cfg = load_config()
+        logs_dir = Path(cfg.paths.get("logs", "logs"))
+        inc_dir = logs_dir / "incidents"
+        reports_dir = Path(cfg.paths.get("reports", "reports"))
+        try:
+            zip_path = bundle_latest(reports_dir, inc_dir)
+            console.print(f"[bold green]Bundle created[/bold green] → {zip_path}")
+        except FileNotFoundError:
+            console.print("[red]No incidents found. Run 'kairos scan' first.[/red]")
 
     elif not args.init:
         parser.print_help()
