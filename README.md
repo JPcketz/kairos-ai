@@ -1,3 +1,16 @@
+## ⬇️ Download (Windows)
+
+Get the latest **kairos.exe** from **Releases**.
+
+**Quick start (no install):**
+```pwsh
+.\kairos.exe --init
+.\kairos.exe serve --open     # opens the web UI
+# or CLI:
+.\kairos.exe scan --dry
+.\kairos.exe report --open
+What it does: finds suspicious processes + parent→child chains, network anomalies, risky files/emails, persistence; optional YARA; outputs HTML report, PDF, playbook, ticket text, and a bundle ZIP. All local.
+
 # Kairos A.I. — SOC Sidekick (MVP)
 
 Kairos is a local-first assistant for SOC analysts and ethical hackers. It **finds**, **assesses**, and **guides containment** so humans can keep working instead of drowning in paperwork. It runs on the client’s machine — no data leaves by default.
