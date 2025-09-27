@@ -86,13 +86,12 @@ def _count_types(arts: List[Dict[str, Any]]) -> int:
     kinds = set()
     for a in arts:
         t = (a.get("type") or "").lower()
-        # ADD "email" here:
-        if t in {"process","network","file","email","email:url","email:attachment"}:
-            # normalize both email:* under "email"
-            if t.startswith("email"):
-                kinds.add("email")
-            else:
-                kinds.add(t)
+        if t.startswith("email"):
+            kinds.add("email")
+        elif t.startswith("yara"):
+            kinds.add("yara")
+        elif t in {"process","network","file","persistence"}:
+            kinds.add(t)
     return len(kinds)
 
 def apply_policy(incident: Dict[str, Any], policy: Policy) -> Dict[str, Any]:

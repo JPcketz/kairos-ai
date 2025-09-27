@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Kairos A.I. — SOC Sidekick</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="/static/favicon.svg">
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0b1220;color:#e6edf3;margin:0}
+    .wrap{max-width:900px;margin:0 auto;padding:28px}
+    h1{margin:0 0 16px;font-size:26px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:16px}
+    .card{background:#121a2b;border:1px solid #22304d;border-radius:14px;padding:16px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #2d3e62;background:#1b2640;color:#fff;text-decoration:none}
+    .btn:hover{filter:brightness(1.15)}
+    .muted{color:#98a6c9;font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🛡️ Kairos A.I. — SOC Sidekick</h1>
+    <p class="muted">Click to scan (dry-run), view the latest report, and download handoff artifacts.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>1) Run scan (dry)</h3>
+        <form action="/scan" method="post">
+          <button class="btn" type="submit">Run scan</button>
+        </form>
+        <p class="muted">No notifications; writes latest incident JSON.</p>
+      </div>
+      <div class="card">
+        <h3>2) View HTML report</h3>
+        <a class="btn" href="/report" target="_blank">Open report</a>
+        <p class="muted">{{ "Ready" if has_report else "Run a scan first" }}</p>
+      </div>
+      <div class="card">
+        <h3>3) PDF & Playbook</h3>
+        <a class="btn" href="/pdf" target="_blank">Open PDF</a>
+        <a class="btn" href="/playbook" target="_blank" style="margin-left:8px;">Open Playbook</a>
+      </div>
+      <div class="card">
+        <h3>4) Bundle ZIP</h3>
+        <a class="btn" href="/bundle">Download ZIP</a>
+        <p class="muted">{{ "Latest incident found" if has_incident else "Run a scan first" }}</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

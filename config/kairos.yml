@@ -29,3 +29,8 @@ email:
   folder: "INBOX"
   max_messages: 10
   local_eml_dir: "mailbox"   # drop .eml files here for offline testing
+
+yara:
+  enabled: true         # flip to true when you want to use YARA
+  rules_dir: "rules"     # place .yar/.yara files here
+  max_size_bytes: 10485760   # 10 MB per file cap for scanning

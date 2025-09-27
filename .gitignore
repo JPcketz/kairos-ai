@@ -1,0 +1,13 @@
+# venv & build artifacts
+.venv/
+dist/
+build/
+*.spec
+__pycache__/
+
+# runtime outputs
+logs/
+reports/
+
+# local mail/rules samples (keep rules if you want them versioned)
+mailbox/

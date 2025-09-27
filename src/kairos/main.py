@@ -1,6 +1,8 @@
 import argparse
+import webbrowser
 from pathlib import Path
 from rich.console import Console
+
 from .core.config import ensure_default_config, load_config
 from .core.scaffold import run_process_scan_and_write_incident
 from .reports.html import render_report
@@ -34,6 +36,12 @@ def main():
     # bundle
     bundle = sub.add_parser("bundle", help="Zip latest artifacts (HTML, PDF, playbook, ticket, JSON) for handoff")
 
+    # serve (web UI)
+    serve = sub.add_parser("serve", help="Start the Kairos web UI")
+    serve.add_argument("--host", default="127.0.0.1")
+    serve.add_argument("--port", type=int, default=8000)
+    serve.add_argument("--open", action="store_true", help="Open browser after start")
+
     args = parser.parse_args()
 
     if args.init:
@@ -52,7 +60,6 @@ def main():
         out = render_report(cfg)
         console.print(f"[bold cyan]Report rendered[/bold cyan] → {out}")
         if getattr(args, "open", False):
-            import webbrowser
             webbrowser.open(Path(out).resolve().as_uri())
 
     elif args.cmd == "pdf":
@@ -84,7 +91,6 @@ def main():
         console.print(f"[bold magenta]Playbook written[/bold magenta] → {md_path}")
         console.print(f"[bold magenta]Ticket text written[/bold magenta] → {txt_path}")
         if getattr(args, "open", False):
-            import webbrowser
             webbrowser.open(md_path.resolve().as_uri())
 
     elif args.cmd == "bundle":
@@ -97,6 +103,15 @@ def main():
             console.print(f"[bold green]Bundle created[/bold green] → {zip_path}")
         except FileNotFoundError:
             console.print("[red]No incidents found. Run 'kairos scan' first.[/red]")
+
+    elif args.cmd == "serve":
+        host = getattr(args, "host", "127.0.0.1")
+        port = int(getattr(args, "port", 8000))
+        if getattr(args, "open", False):
+            webbrowser.open(f"http://{host}:{port}")
+        import uvicorn  # lazy import so it's optional
+        from .webapp.server import app
+        uvicorn.run(app, host=host, port=port)
 
     elif not args.init:
         parser.print_help()
