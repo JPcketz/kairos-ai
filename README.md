@@ -17,6 +17,13 @@ Kairos is a local-first assistant for SOC analysts and ethical hackers. It **fin
 
 ---
 
+## ⬇️ Download (Windows)
+Get the latest **kairos.exe** from Releases.
+
+```pwsh
+.\kairos.exe --init
+.\kairos.exe serve --open
+
 ## ✨ Features (MVP)
 - **Processes** with parent→child chains (e.g., `winword.exe → powershell.exe`)
 - **Network** snapshot (risky procs → public IP / cleartext ports like 80/8080/53)
