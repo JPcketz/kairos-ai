@@ -1,13 +1,19 @@
-# venv & build artifacts
+# virtualenv & build
 .venv/
 dist/
 build/
 *.spec
 __pycache__/
 
-# runtime outputs
+# runtime outputs & demos
 logs/
 reports/
-
-# local mail/rules samples (keep rules if you want them versioned)
 mailbox/
+demo/
+rules-starter.zip
+
+# OS/editor junk
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
