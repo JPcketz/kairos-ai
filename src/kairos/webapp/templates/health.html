@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8"><title>Kairos A.I. — Health</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0b1220;color:#e6edf3;margin:0}
+    .wrap{max-width:900px;margin:0 auto;padding:28px}
+    h1{margin:0 0 16px;font-size:26px}
+    table{width:100%;border-collapse:collapse;margin-top:16px}
+    th,td{padding:10px;border-bottom:1px solid #22304d;text-align:left}
+    .ok{color:#7ee787}.warn{color:#ffb86b}.err{color:#ff6b6b}
+    a{color:#79c0ff}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🩺 Kairos Health</h1>
+    <p>Quick status of config, environment and optional features.</p>
+
+    <h3>Core</h3>
+    <table>
+      <tr><th>Item</th><th>Status</th><th>Detail</th></tr>
+      <tr><td>Logs path</td><td class="{{ 'ok' if core.logs_exists else 'err' }}">{{ 'OK' if core.logs_exists else 'Missing' }}</td><td>{{ core.logs }}</td></tr>
+      <tr><td>Reports path</td><td class="{{ 'ok' if core.reports_exists else 'err' }}">{{ 'OK' if core.reports_exists else 'Missing' }}</td><td>{{ core.reports }}</td></tr>
+    </table>
+
+    <h3>Optional integrations</h3>
+    <table>
+      <tr><th>Feature</th><th>Status</th><th>Notes</th></tr>
+      <tr><td>Twilio SMS</td>
+          <td class="{{ 'ok' if sms.ready else ('warn' if sms.enabled else 'err') }}">
+            {{ 'Ready' if sms.ready else ('Disabled' if not sms.enabled else 'Missing env') }}
+          </td>
+          <td>enabled={{ sms.enabled }}, from={{ sms.frm or '-' }}, to={{ sms.to or '-' }}</td></tr>
+      <tr><td>IMAP Email</td>
+          <td class="{{ 'ok' if email.ready else ('warn' if email.enabled else 'err') }}">
+            {{ 'Ready' if email.ready else ('Disabled' if not email.enabled else 'Missing host/creds') }}
+          </td>
+          <td>enabled={{ email.enabled }}, host={{ email.host or '-' }}, local_eml_dir={{ email.local_dir }}</td></tr>
+      <tr><td>YARA</td>
+          <td class="{{ 'ok' if yara.ready else ('warn' if yara.enabled else 'err') }}">
+            {{ 'Ready' if yara.ready else ('Disabled' if not yara.enabled else 'No rules or lib') }}
+          </td>
+          <td>enabled={{ yara.enabled }}, rules_dir={{ yara.rules_dir }}</td></tr>
+    </table>
+
+    <p style="margin-top:20px;"><a href="/">← Back to dashboard</a></p>
+  </div>
+</body></html>
